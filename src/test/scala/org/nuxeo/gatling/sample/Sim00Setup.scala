@@ -32,7 +32,7 @@ import org.nuxeo.cap.bench.NuxeoRest
 
 object Setup {
 
-  def run = (userCount: Integer) => {
+  def get = (userCount: Integer) => {
     scenario("Setup")
       .feed(Feeders.admins)
         .exec(NuxeoRest.createGroupIfNotExists(Constants.GAT_GROUP_NAME)).exitHereIfFailed
@@ -54,7 +54,7 @@ class Sim00Setup extends Simulation {
     .connection("keep-alive")
 
   val userCount = Source.fromFile(GatlingFiles.dataDirectory + "/users.csv").getLines.size - 1
-  val scn = Setup.run(userCount)
+  val scn = Setup.get(userCount)
 
   setUp(scn.inject(atOnceUsers(1))).protocols(httpProtocol)
     .assertions(global.successfulRequests.percent.is(100))

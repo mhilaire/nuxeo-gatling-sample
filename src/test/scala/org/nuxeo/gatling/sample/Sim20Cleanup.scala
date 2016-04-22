@@ -32,7 +32,7 @@ import org.nuxeo.cap.bench.NuxeoRest
 
 object Cleanup {
 
-  def run = (userCount: Integer) => {
+  def get = (userCount: Integer) => {
     scenario("Cleanup")
       .feed(Feeders.admins)
         .exec(NuxeoRest.deleteFileDocumentAsAdmin(Constants.GAT_WS_PATH))
@@ -53,7 +53,7 @@ class Sim20Cleanup extends Simulation {
     .connection("keep-alive")
 
   val userCount = Source.fromFile(GatlingFiles.dataDirectory + "/users.csv").getLines.size - 1
-  val scn = Cleanup.run(userCount)
+  val scn = Cleanup.get(userCount)
 
   setUp(scn.inject(atOnceUsers(1))).protocols(httpProtocol)
     .assertions(global.successfulRequests.percent.is(100))
