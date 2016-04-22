@@ -20,22 +20,16 @@ package org.nuxeo.gatling.sample
  *     Antoine Taillefer
  */
 
-object Headers {
+import io.gatling.core.Predef._
+import io.gatling.http.Predef._
 
-  val base = Map(
-    "User-Agent" -> "Gatling"
-  )
+import org.nuxeo.cap.bench.Constants
+import org.nuxeo.cap.bench.Headers
 
-  val nxProperties = base.++(
-    Map(
-      "X-Nxdocumentproperties" -> "*",
-      "X-Nxproperties" -> "*"
-    ))
+object Feeders {
 
-  val withEnricher = nxProperties.++(
-    Map(
-      "X-NXenrichers.document" -> "files",
-      "depth" -> "max"
-    ))
+  val usersQueue = csv("users.csv").queue
+  val users = csv("users.csv").circular
+  val admins = csv("admins.csv").circular
 
 }

@@ -26,17 +26,21 @@ import io.gatling.http.Predef._
 
 import scala.io.Source
 
+import org.nuxeo.cap.bench.Constants
+import org.nuxeo.cap.bench.Parameters
+import org.nuxeo.cap.bench.NuxeoRest
+
 object Setup {
 
   def run = (userCount: Integer) => {
     scenario("Setup")
       .feed(Feeders.admins)
-        .exec(Actions.createGroupIfNotExists(Constants.GAT_GROUP_NAME)).exitHereIfFailed
-        .exec(Actions.createDocumentIfNotExistsAsAdmin(Constants.ROOT_WORKSPACE_PATH, Constants.GAT_WS_NAME, "Workspace")).exitHereIfFailed
-        .exec(Actions.grantReadWritePermission(Constants.GAT_WS_PATH, Constants.GAT_GROUP_NAME)).exitHereIfFailed
+        .exec(NuxeoRest.createGroupIfNotExists(Constants.GAT_GROUP_NAME)).exitHereIfFailed
+        .exec(NuxeoRest.createDocumentIfNotExistsAsAdmin(Constants.ROOT_WORKSPACE_PATH, Constants.GAT_WS_NAME, "Workspace")).exitHereIfFailed
+        .exec(NuxeoRest.grantReadWritePermission(Constants.GAT_WS_PATH, Constants.GAT_GROUP_NAME)).exitHereIfFailed
         .repeat(userCount.intValue(), "userCount") {
           feed(Feeders.usersQueue)
-            .exec(Actions.createUserIfNotExists(Constants.GAT_GROUP_NAME))
+            .exec(NuxeoRest.createUserIfNotExists(Constants.GAT_GROUP_NAME))
         }
   }
 }

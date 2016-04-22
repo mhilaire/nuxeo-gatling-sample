@@ -26,17 +26,21 @@ import io.gatling.http.Predef._
 
 import scala.io.Source
 
+import org.nuxeo.cap.bench.Constants
+import org.nuxeo.cap.bench.Parameters
+import org.nuxeo.cap.bench.NuxeoRest
+
 object Cleanup {
 
   def run = (userCount: Integer) => {
     scenario("Cleanup")
       .feed(Feeders.admins)
-        .exec(Actions.deleteFileDocumentAsAdmin(Constants.GAT_WS_PATH))
+        .exec(NuxeoRest.deleteFileDocumentAsAdmin(Constants.GAT_WS_PATH))
         .repeat(userCount.intValue(), "count") {
           feed(Feeders.usersQueue)
-            .exec(Actions.deleteUser())
+            .exec(NuxeoRest.deleteUser())
         }
-        .exec(Actions.deleteGroup(Constants.GAT_GROUP_NAME))
+        .exec(NuxeoRest.deleteGroup(Constants.GAT_GROUP_NAME))
   }
 }
 

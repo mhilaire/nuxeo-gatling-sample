@@ -26,6 +26,9 @@ import io.gatling.http.Predef._
 import scala.concurrent.duration.Duration
 import scala.util.Random
 
+import org.nuxeo.cap.bench.Constants
+import org.nuxeo.cap.bench.Parameters
+
 object CreateDocuments {
 
   def get = (duration: Duration, pause: Duration) => {
@@ -33,7 +36,7 @@ object CreateDocuments {
       .during(duration) {  
         feed(Feeders.users)
         .exec(session => session.set("randomInt", Math.abs(Random.nextInt)))
-        .exec(Actions.createDocument(Constants.GAT_WS_PATH, "file_${user}_${randomInt}", "File"))
+        .exec(RestClient.createDocument(Constants.GAT_WS_PATH, "file_${user}_${randomInt}", "File"))
         .pause(pause)
       }
   }
@@ -49,7 +52,7 @@ class Sim10CreateDocuments extends Simulation {
     .acceptEncodingHeader("identity")
     .connection("keep-alive")
 
-  val scn = CreateDocuments.get(Parameters.getSimulationDuration(60), Parameters.getPause(1))
+  val scn = CreateDocuments.get(Parameters.getSimulationDuration(60), Parameters.getPause(1000))
 
   setUp(scn.inject(rampUsers(Parameters.getConcurrentUsers(10)).over(Parameters.getRampDuration(5))).exponentialPauses)
     .protocols(httpProtocol)

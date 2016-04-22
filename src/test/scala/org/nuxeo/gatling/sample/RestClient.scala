@@ -20,13 +20,24 @@ package org.nuxeo.gatling.sample
  *     Antoine Taillefer
  */
 
-object Constants {
-  val API_PATH = "/api/v1/path"
-  val AUTOMATION_PATH = "/site/automation"
-  val ROOT_WORKSPACE_PATH = "/default-domain/workspaces"
+import io.gatling.core.Predef._
+import io.gatling.http.Predef._
 
-  val GAT_WS_NAME = "Bench_Gatling"
-  val GAT_WS_PATH = ROOT_WORKSPACE_PATH + "/Bench_Gatling"
-  val GAT_GROUP_NAME = "gatling"
+import org.nuxeo.cap.bench.Constants
+import org.nuxeo.cap.bench.Headers
+
+object RestClient {
+
+  def createDocument = (parent: String, name: String, docType: String) => {
+    http("Create " + docType)
+      .post(Constants.API_PATH + parent)
+      .headers(Headers.base)
+      .header("Content-Type", "application/json")
+      .basicAuth("${user}", "${password}")
+      .body(StringBody(
+      """{ "entity-type": "document", "name":"""" + name + """", "type": """" + docType +
+        """","properties": {"dc:title":"""" + name + """", "dc:description": "Gatling test document"}}""".stripMargin))
+      .check(status.in(201))
+  }
 
 }
