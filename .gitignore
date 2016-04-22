@@ -1,0 +1,11 @@
+*.swp
+*~
+target
+bin
+.DS_Store
+.classpath
+.project
+.settings
+.idea
+*.iml
+.cache
