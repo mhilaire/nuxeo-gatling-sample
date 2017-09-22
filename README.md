@@ -34,14 +34,9 @@ This simulation removes all documents, users and group from the Nuxeo instance.
 
 ### All in One
 
-Sets up a Nuxeo instance with the required packages and configuration, runs all the simulations and stops the Nuxeo instance.
+Run all the simulations:
 
     mvn -nsu verify -Pbench
-
-You can add the following profiles:
-
-- `pgsql`: use a PostgreSQL database as a backend for Nuxeo
-- `monitor`: record metrics to Graphite
 
 Default options: see below.
 
@@ -52,7 +47,8 @@ Default options: see below.
     Choose a simulation number:
          [0] org.nuxeo.gatling.sample.Sim00Setup
          [1] org.nuxeo.gatling.sample.Sim10CreateDocuments
-         [2] org.nuxeo.gatling.sample.Sim20Cleanup
+         [2] org.nuxeo.gatling.sample.Sim20SearchDocuments
+         [3] org.nuxeo.gatling.sample.Sim30Cleanup
 
 Common options with default values:
 

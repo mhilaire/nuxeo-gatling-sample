@@ -40,4 +40,13 @@ object RestClient {
       .check(status.in(201))
   }
 
+  def searchDocument = (query: String) => {
+    http("Search " + query)
+      .get(Constants.API_QUERY + "?query=" + query)
+      .headers(Headers.base)
+      .header("Content-Type", "application/json")
+      .basicAuth("${user}", "${password}")
+      .check(status.in(200))
+  }
+
 }

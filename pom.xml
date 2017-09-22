@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.nuxeo.ecm.distribution</groupId>
     <artifactId>nuxeo-distribution</artifactId>    
-    <version>8.3-SNAPSHOT</version>
+    <version>8.10</version>
   </parent>
 
   <artifactId>nuxeo-gatling-sample</artifactId>
@@ -49,15 +49,7 @@
     </dependency>
     <dependency>
       <groupId>org.nuxeo.ecm.distribution</groupId>
-      <artifactId>nuxeo-distribution-tomcat</artifactId>
-      <classifier>nuxeo-cap</classifier>
-      <version>${project.version}</version>
-      <type>zip</type>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.nuxeo.ecm.distribution</groupId>
-      <artifactId>nuxeo-distribution-cap-gatling-tests</artifactId>
+      <artifactId>nuxeo-jsf-ui-gatling-tests</artifactId>
       <version>${project.version}</version>
       <type>test-jar</type>
       <scope>test</scope>
@@ -97,44 +89,6 @@
               <goal>integration-test</goal>
               <goal>verify</goal>
             </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.nuxeo.build</groupId>
-        <artifactId>ant-assembly-maven-plugin</artifactId>
-        <configuration>
-          <buildFile>${basedir}/itests.xml</buildFile>
-        </configuration>
-        <executions>
-          <execution>
-            <id>start-nuxeo</id>
-            <phase>pre-integration-test</phase>
-            <goals>
-              <!-- Goal mapped on package phase by default -->
-              <goal>build</goal>
-            </goals>
-            <configuration>
-              <targets>
-                <target>prepare-environment</target>
-                <target>tune-nuxeo</target>
-                <target>start</target>
-              </targets>
-            </configuration>
-          </execution>
-          <execution>
-            <id>stop-nuxeo</id>
-            <phase>post-integration-test</phase>
-            <goals>
-              <!-- Goal mapped on package phase by default -->
-              <goal>build</goal>
-            </goals>
-            <configuration>
-              <targets>
-                <target>stop</target>
-                <target>cleanup-environment</target>
-              </targets>
-            </configuration>
           </execution>
         </executions>
       </plugin>

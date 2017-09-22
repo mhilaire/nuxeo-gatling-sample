@@ -21,40 +21,39 @@ package org.nuxeo.gatling.sample
  */
 
 import io.gatling.core.Predef._
-import io.gatling.core.config.GatlingFiles
 import io.gatling.http.Predef._
 
-import scala.io.Source
+import scala.concurrent.duration.Duration
+import scala.util.Random
 
 import org.nuxeo.cap.bench.Constants
 import org.nuxeo.cap.bench.Parameters
-import org.nuxeo.cap.bench.NuxeoRest
 
-object Cleanup {
+object SearchDocuments {
 
-  def get = (userCount: Integer) => {
-    scenario("Cleanup")
-      .feed(Feeders.admins)
-        .exec(NuxeoRest.deleteFileDocumentAsAdmin(Constants.GAT_WS_PATH))
-        .repeat(userCount.intValue(), "count") {
-          feed(Feeders.usersQueue)
-            .exec(NuxeoRest.deleteUser())
-        }
-        .exec(NuxeoRest.deleteGroup(Constants.GAT_GROUP_NAME))
+  def get = (duration: Duration, pause: Duration) => {
+    scenario("Search Documents")
+      .during(duration) {  
+        feed(Feeders.users)
+        .exec(RestClient.searchDocument("Select * From File WHERE dc:title LIKE 'file_${user}%25' &pageSize=2&currentPageIndex=1"))
+        .pause(pause)
+      }
   }
+
 }
 
-class Sim20Cleanup extends Simulation {
+class Sim20SearchDocuments extends Simulation {
 
   val httpProtocol = http
     .baseURL(Parameters.getBaseUrl())
     .disableWarmUp
     .acceptEncodingHeader("gzip, deflate")
+    .acceptEncodingHeader("identity")
     .connection("keep-alive")
 
-  val userCount = Source.fromFile(GatlingFiles.dataDirectory + "/users.csv").getLines.size - 1
-  val scn = Cleanup.get(userCount)
+  val scn = SearchDocuments.get(Parameters.getSimulationDuration(60), Parameters.getPause(1000))
 
-  setUp(scn.inject(atOnceUsers(1))).protocols(httpProtocol)
+  setUp(scn.inject(rampUsers(Parameters.getConcurrentUsers(10)).over(Parameters.getRampDuration(5))).exponentialPauses)
+    .protocols(httpProtocol)
     .assertions(global.successfulRequests.percent.is(100))
 }
