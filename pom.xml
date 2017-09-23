@@ -129,12 +129,21 @@
                 </configuration>
               </execution>
               <execution>
+                <id>search-documents</id>
+                <goals>
+                  <goal>execute</goal>
+                </goals>
+                <configuration>
+                  <simulationClass>org.nuxeo.gatling.sample.Sim20SearchDocuments</simulationClass>
+                </configuration>
+              </execution>
+              <execution>
                 <id>cleanup</id>
                 <goals>
                   <goal>execute</goal>
                 </goals>
                 <configuration>
-                  <simulationClass>org.nuxeo.gatling.sample.Sim20Cleanup</simulationClass>
+                  <simulationClass>org.nuxeo.gatling.sample.Sim30Cleanup</simulationClass>
                 </configuration>
               </execution>
             </executions>
